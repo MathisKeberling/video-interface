@@ -47,10 +47,16 @@
       z-index: 2;
       display: none;
     }
-    button {
+    #controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-top: 10px;
+    }
+    button {
+      margin: 5px 0;
       padding: 12px 24px;
-      font-size: 18px;
+      font-size: 16px;
       border: none;
       border-radius: 10px;
       background-color: #007bff;
@@ -62,7 +68,7 @@
       background-color: #0056b3;
     }
     a {
-      margin-top: 20px;
+      margin-top: 10px;
       text-decoration: none;
       color: white;
       font-weight: bold;
@@ -97,27 +103,35 @@
     const downloadLink = document.getElementById('download-link');
     let mediaRecorder, chunks = [];
 
-    startBtn.addEventListener('click', async () => {
+    // Fonction pour activer le plein écran
+    function enableFullscreen() {
       if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen(); // Activer le plein écran
+        document.documentElement.requestFullscreen();
       }
+    }
+
+    // Activer le plein écran dès le chargement
+    window.addEventListener('load', enableFullscreen);
+
+    startBtn.addEventListener('click', async () => {
       // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
       countdown.style.display = 'block';
 
       // Démarrer le compte à rebours
       let timer = 5;
       const interval = setInterval(() => {
-          countdown.textContent = timer--;
-          if (timer < 0) {
-              clearInterval(interval);
-              countdown.style.display = 'none';
-              startRecording(stream);
-          }
+        countdown.textContent = timer--;
+        if (timer < 0) {
+          clearInterval(interval);
+          countdown.style.display = 'none';
+          startRecording(stream);
+        }
       }, 1000);
     });
 
@@ -133,12 +147,12 @@
         chunks = [];
       };
       mediaRecorder.start();
-      stopBtn.style.display = 'block';
     }
 
     stopBtn.addEventListener('click', () => {
       mediaRecorder.stop();
       stopBtn.style.display = 'none';
+      startBtn.style.display = 'block';
     });
 
     downloadLink.addEventListener('click', () => {
