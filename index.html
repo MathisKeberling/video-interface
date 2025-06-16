@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booth Vidéo</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <style>
     body {
       margin: 0;
@@ -21,7 +24,7 @@
       display: block;
     }
     #image-container img {
-      max-width: 90%;
+      max-width: 100%;
       height: auto;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -45,44 +48,30 @@
       z-index: 2;
       display: none;
     }
-    #controls {
-      position: fixed;
-      bottom: 20px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 0 10px;
-      z-index: 3;
-    }
-    button, a {
-      padding: 12px 20px;
-      font-size: 16px;
+    button {
+      margin-top: 10px;
+      padding: 12px 24px;
+      font-size: 18px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       background-color: #007bff;
       color: white;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
     }
     button:hover {
       background-color: #0056b3;
     }
     a {
-      background: #28a745;
-      display: none;
+      margin-top: 20px;
       text-decoration: none;
-    }
-    a:hover {
-      background-color: #1e7e34;
-    }
-    #stop-btn {
+      color: white;
+      font-weight: bold;
+      background: #28a745;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       display: none;
-      background-color: #ff4444;
-    }
-    #stop-btn:hover {
-      background-color: #cc0000;
     }
   </style>
 </head>
@@ -96,7 +85,7 @@
   </div>
   <div id="controls">
     <button id="start-btn">Lancer la vidéo</button>
-    <button id="stop-btn">Arrêter</button>
+    <button id="stop-btn" style="display: none;">Arrêter</button>
     <a id="download-link">Télécharger la vidéo</a>
   </div>
 
@@ -109,30 +98,16 @@
     const downloadLink = document.getElementById('download-link');
     let mediaRecorder, chunks = [];
 
-    // Fonction pour activer le plein écran
-    function enableFullscreen() {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      }
-    }
-
-    // Activer le plein écran dès que la page est chargée
-    window.addEventListener('load', enableFullscreen);
-
     startBtn.addEventListener('click', async () => {
-      enableFullscreen(); // S'assurer que le plein écran est activé
+      // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
-      stopBtn.style.display = 'block';
       countdown.style.display = 'block';
 
+      // Démarrer le compte à rebours
       let timer = 5;
       const interval = setInterval(() => {
         countdown.textContent = timer--;
@@ -156,12 +131,12 @@
         chunks = [];
       };
       mediaRecorder.start();
+      stopBtn.style.display = 'block';
     }
 
     stopBtn.addEventListener('click', () => {
       mediaRecorder.stop();
       stopBtn.style.display = 'none';
-      startBtn.style.display = 'block';
     });
 
     downloadLink.addEventListener('click', () => {
