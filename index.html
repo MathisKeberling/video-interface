@@ -26,18 +26,23 @@
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    #controls {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
     #preview {
       display: none;
       width: 100%;
       height: 100%;
       object-fit: cover;
       background: black;
+      position: relative;
+    }
+    #countdown {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 48px;
+      font-weight: bold;
+      color: red;
+      z-index: 2;
+      display: none;
     }
     button {
       margin-top: 10px;
@@ -64,20 +69,16 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       display: none;
     }
-    #countdown {
-      font-size: 48px;
-      color: red;
-      display: none;
-    }
   </style>
 </head>
 <body>
   <div id="image-container">
     <img src="imageTest.png" alt="Design Canva">
   </div>
-  <video id="preview" autoplay playsinline></video>
-  <div id="controls">
+  <video id="preview" autoplay playsinline>
     <div id="countdown">5</div>
+  </video>
+  <div id="controls">
     <button id="start-btn">Lancer la vidéo</button>
     <button id="stop-btn" style="display: none;">Arrêter</button>
     <a id="download-link">Télécharger la vidéo</a>
@@ -125,14 +126,13 @@
         chunks = [];
       };
       mediaRecorder.start();
-      stopBtn.style.display = 'block';
-      stopBtn.addEventListener('click', () => stopRecording());
+      stopBtn.style.display = 'block'; // Afficher le bouton "Arrêter"
     }
 
-    function stopRecording() {
-      mediaRecorder.stop();
-      stopBtn.style.display = 'none';
-    }
+    stopBtn.addEventListener('click', () => {
+      mediaRecorder.stop(); // Arrêter l'enregistrement
+      stopBtn.style.display = 'none'; // Cacher le bouton "Arrêter"
+    });
 
     downloadLink.addEventListener('click', () => {
       // Réinitialiser l'interface après le téléchargement
