@@ -117,11 +117,11 @@
     });
 
     function startRecording(stream) {
-      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
       mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
       mediaRecorder.onstop = () => {
         // Crée un blob complet à partir des chunks enregistrés
-        const videoBlob = new Blob(chunks, { type: 'video/mp4' });
+        const videoBlob = new Blob(chunks, { type: 'video/webm' });
 
         // Vérification explicite de la taille du blob
         if (videoBlob.size > 0) {
@@ -133,7 +133,7 @@
         // Générer l'URL de téléchargement
         const videoURL = URL.createObjectURL(videoBlob);
         downloadLink.href = videoURL;
-        downloadLink.download = 'video.mp4';
+        downloadLink.download = 'video.webm';
 
         // Rendre le lien visible
         downloadLink.style.display = 'block';
