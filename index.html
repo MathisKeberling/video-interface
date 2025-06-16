@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booth Vidéo</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
   <style>
     body {
       margin: 0;
@@ -96,6 +98,9 @@
     let mediaRecorder, chunks = [];
 
     startBtn.addEventListener('click', async () => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen(); // Activer le plein écran
+      }
       // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
@@ -120,38 +125,23 @@
       mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
       mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
       mediaRecorder.onstop = () => {
-        // Crée un blob complet à partir des chunks enregistrés
         const videoBlob = new Blob(chunks, { type: 'video/webm' });
-
-        // Vérification explicite de la taille du blob
-        if (videoBlob.size > 0) {
-            console.log(`Blob complet créé, taille : ${videoBlob.size} octets`);
-        } else {
-            console.error('Erreur : Le blob est vide ou corrompu.');
-        }
-
-        // Générer l'URL de téléchargement
         const videoURL = URL.createObjectURL(videoBlob);
         downloadLink.href = videoURL;
         downloadLink.download = 'video.webm';
-
-        // Rendre le lien visible
         downloadLink.style.display = 'block';
-
-        // Réinitialiser les chunks pour la prochaine vidéo
         chunks = [];
       };
-      mediaRecorder.start(); // Démarrer l'enregistrement sans limite de durée
-      stopBtn.style.display = 'block'; // Afficher le bouton "Arrêter"
+      mediaRecorder.start();
+      stopBtn.style.display = 'block';
     }
 
     stopBtn.addEventListener('click', () => {
-      mediaRecorder.stop(); // Arrêter l'enregistrement uniquement lorsque ce bouton est cliqué
-      stopBtn.style.display = 'none'; // Cacher le bouton "Arrêter"
+      mediaRecorder.stop();
+      stopBtn.style.display = 'none';
     });
 
     downloadLink.addEventListener('click', () => {
-      // Réinitialiser l'interface après le téléchargement
       downloadLink.style.display = 'none';
       startBtn.style.display = 'block';
       videoPreview.style.display = 'none';
