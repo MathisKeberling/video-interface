@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booth Video Interface</title>
+  <title>Booth Vidéo</title>
   <style>
     body {
       display: flex;
@@ -25,19 +25,31 @@
       color: white;
       cursor: pointer;
     }
+    #countdown {
+      font-size: 48px;
+      color: red;
+      display: none;
+    }
     video {
       display: none;
       width: 100%;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <h1>Votre texte personnalisé ici</h1>
-  <button id="start-btn">Lancer la vidéo</button>
+  <div id="countdown">5</div>
   <video id="preview" autoplay playsinline></video>
+  <button id="start-btn">Lancer la vidéo</button>
+  <button id="stop-btn" style="display:none;">Arrêter</button>
+  <a id="download-link" style="display:none;">Télécharger la vidéo</a>
   <script>
     const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const countdown = document.getElementById('countdown');
     const videoPreview = document.getElementById('preview');
+    const downloadLink = document.getElementById('download-link');
     let mediaRecorder, chunks = [];
 
     startBtn.addEventListener('click', async () => {
@@ -46,13 +58,15 @@
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
+      countdown.style.display = 'block';
 
       // Compte à rebours
-      let countdown = 5;
-      const countdownInterval = setInterval(() => {
-        startBtn.textContent = `Démarre dans ${countdown--}`;
-        if (countdown < 0) {
-          clearInterval(countdownInterval);
+      let timer = 5;
+      const interval = setInterval(() => {
+        countdown.textContent = timer--;
+        if (timer < 0) {
+          clearInterval(interval);
+          countdown.style.display = 'none';
           startRecording(stream);
         }
       }, 1000);
@@ -64,29 +78,27 @@
       mediaRecorder.onstop = () => {
         const videoBlob = new Blob(chunks, { type: 'video/mp4' });
         const videoURL = URL.createObjectURL(videoBlob);
-        console.log('Vidéo enregistrée : ', videoURL);
-        chunks = []; // Reset
-        stopStream(stream);
-        resetUI();
+        downloadLink.href = videoURL;
+        downloadLink.download = 'video.mp4';
+        downloadLink.textContent = 'Télécharger la vidéo';
+        downloadLink.style.display = 'block';
+        chunks = [];
       };
       mediaRecorder.start();
-      startBtn.textContent = 'Arrêter';
-      startBtn.style.display = 'block';
-      startBtn.onclick = stopRecording;
+      stopBtn.style.display = 'block';
+      stopBtn.addEventListener('click', () => stopRecording());
     }
 
     function stopRecording() {
       mediaRecorder.stop();
-    }
-
-    function stopStream(stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stopBtn.style.display = 'none';
+      resetUI();
     }
 
     function resetUI() {
-      videoPreview.style.display = 'none';
-      startBtn.textContent = 'Lancer la vidéo';
       startBtn.style.display = 'block';
+      videoPreview.srcObject.getTracks().forEach(track => track.stop());
+      videoPreview.style.display = 'none';
     }
   </script>
 </body>
