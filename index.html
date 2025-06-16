@@ -36,9 +36,10 @@
     }
     #countdown {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 48px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 96px;
       font-weight: bold;
       color: red;
       z-index: 2;
@@ -75,9 +76,10 @@
   <div id="image-container">
     <img src="imageTest.png" alt="Design Canva">
   </div>
-  <video id="preview" autoplay playsinline>
+  <div id="preview-container">
+    <video id="preview" autoplay playsinline></video>
     <div id="countdown">5</div>
-  </video>
+  </div>
   <div id="controls">
     <button id="start-btn">Lancer la vidéo</button>
     <button id="stop-btn" style="display: none;">Arrêter</button>
