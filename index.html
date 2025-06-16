@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booth Video Interface</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('your-design.png') no-repeat center center / cover;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    video {
+      display: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Votre texte personnalisé ici</h1>
+  <button id="start-btn">Lancer la vidéo</button>
+  <video id="preview" autoplay playsinline></video>
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const videoPreview = document.getElementById('preview');
+    let mediaRecorder, chunks = [];
+
+    startBtn.addEventListener('click', async () => {
+      // Ouvrir la caméra
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+      videoPreview.srcObject = stream;
+      videoPreview.style.display = 'block';
+      startBtn.style.display = 'none';
+
+      // Compte à rebours
+      let countdown = 5;
+      const countdownInterval = setInterval(() => {
+        startBtn.textContent = `Démarre dans ${countdown--}`;
+        if (countdown < 0) {
+          clearInterval(countdownInterval);
+          startRecording(stream);
+        }
+      }, 1000);
+    });
+
+    function startRecording(stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
+      mediaRecorder.onstop = () => {
+        const videoBlob = new Blob(chunks, { type: 'video/mp4' });
+        const videoURL = URL.createObjectURL(videoBlob);
+        console.log('Vidéo enregistrée : ', videoURL);
+        chunks = []; // Reset
+        stopStream(stream);
+        resetUI();
+      };
+      mediaRecorder.start();
+      startBtn.textContent = 'Arrêter';
+      startBtn.style.display = 'block';
+      startBtn.onclick = stopRecording;
+    }
+
+    function stopRecording() {
+      mediaRecorder.stop();
+    }
+
+    function stopStream(stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+
+    function resetUI() {
+      videoPreview.style.display = 'none';
+      startBtn.textContent = 'Lancer la vidéo';
+      startBtn.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
