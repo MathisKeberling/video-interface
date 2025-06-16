@@ -107,12 +107,12 @@
       // Démarrer le compte à rebours
       let timer = 5;
       const interval = setInterval(() => {
-        countdown.textContent = timer--;
-        if (timer < 0) {
-          clearInterval(interval);
-          countdown.style.display = 'none';
-          startRecording(stream);
-        }
+          countdown.textContent = timer--;
+          if (timer < 0) {
+              clearInterval(interval);
+              countdown.style.display = 'none';
+              startRecording(stream);
+          }
       }, 1000);
     });
 
@@ -120,19 +120,19 @@
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
       mediaRecorder.onstop = () => {
-        const videoBlob = new Blob(chunks, { type: 'video/mp4' });
-        const videoURL = URL.createObjectURL(videoBlob);
-        downloadLink.href = videoURL;
-        downloadLink.download = 'video.mp4';
-        downloadLink.style.display = 'block';
-        chunks = [];
+          const videoBlob = new Blob(chunks, { type: 'video/mp4' });
+          const videoURL = URL.createObjectURL(videoBlob);
+          downloadLink.href = videoURL;
+          downloadLink.download = 'video.mp4';
+          downloadLink.style.display = 'block';
+          chunks = [];
       };
-      mediaRecorder.start();
+      mediaRecorder.start(); // Démarrer l'enregistrement sans limite de durée
       stopBtn.style.display = 'block'; // Afficher le bouton "Arrêter"
     }
 
     stopBtn.addEventListener('click', () => {
-      mediaRecorder.stop(); // Arrêter l'enregistrement
+      mediaRecorder.stop(); // Arrêter l'enregistrement uniquement lorsque ce bouton est cliqué
       stopBtn.style.display = 'none'; // Cacher le bouton "Arrêter"
     });
 
