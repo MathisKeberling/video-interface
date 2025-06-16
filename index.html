@@ -120,12 +120,26 @@
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
       mediaRecorder.onstop = () => {
-          const videoBlob = new Blob(chunks, { type: 'video/mp4' });
-          const videoURL = URL.createObjectURL(videoBlob);
-          downloadLink.href = videoURL;
-          downloadLink.download = 'video.mp4';
-          downloadLink.style.display = 'block';
-          chunks = [];
+        // Crée un blob complet à partir des chunks enregistrés
+        const videoBlob = new Blob(chunks, { type: 'video/mp4' });
+
+        // Vérification explicite de la taille du blob
+        if (videoBlob.size > 0) {
+            console.log(`Blob complet créé, taille : ${videoBlob.size} octets`);
+        } else {
+            console.error('Erreur : Le blob est vide ou corrompu.');
+        }
+
+        // Générer l'URL de téléchargement
+        const videoURL = URL.createObjectURL(videoBlob);
+        downloadLink.href = videoURL;
+        downloadLink.download = 'video.mp4';
+
+        // Rendre le lien visible
+        downloadLink.style.display = 'block';
+
+        // Réinitialiser les chunks pour la prochaine vidéo
+        chunks = [];
       };
       mediaRecorder.start(); // Démarrer l'enregistrement sans limite de durée
       stopBtn.style.display = 'block'; // Afficher le bouton "Arrêter"
