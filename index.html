@@ -13,7 +13,18 @@
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('your-design.png') no-repeat center center / cover;
+      background: url('imageTest.png') no-repeat center center / cover;
+      color: white;
+      text-align: center;
+    }
+    #content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px); /* Optionnel pour améliorer la lisibilité */
     }
     button {
       margin-top: 20px;
@@ -21,13 +32,13 @@
       font-size: 18px;
       border: none;
       border-radius: 10px;
-      background-color: #007bff;
+      background-color: rgba(0, 123, 255, 0.8);
       color: white;
       cursor: pointer;
     }
     #countdown {
       font-size: 48px;
-      color: red;
+      color: yellow;
       display: none;
     }
     video {
@@ -35,15 +46,27 @@
       width: 100%;
       margin-top: 20px;
     }
+    a {
+      margin-top: 10px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      background: rgba(0, 123, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>Votre texte personnalisé ici</h1>
-  <div id="countdown">5</div>
-  <video id="preview" autoplay playsinline></video>
-  <button id="start-btn">Lancer la vidéo</button>
-  <button id="stop-btn" style="display:none;">Arrêter</button>
-  <a id="download-link" style="display:none;">Télécharger la vidéo</a>
+  <div id="content">
+    <h1>Bienvenue à notre Booth Vidéo</h1>
+    <p>Appuyez sur le bouton ci-dessous pour démarrer votre vidéo</p>
+    <div id="countdown">5</div>
+    <video id="preview" autoplay playsinline></video>
+    <button id="start-btn">Lancer la vidéo</button>
+    <button id="stop-btn" style="display:none;">Arrêter</button>
+    <a id="download-link" style="display:none;">Télécharger la vidéo</a>
+  </div>
   <script>
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
@@ -53,14 +76,12 @@
     let mediaRecorder, chunks = [];
 
     startBtn.addEventListener('click', async () => {
-      // Ouvrir la caméra
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
       countdown.style.display = 'block';
 
-      // Compte à rebours
       let timer = 5;
       const interval = setInterval(() => {
         countdown.textContent = timer--;
