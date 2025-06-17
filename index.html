@@ -143,7 +143,8 @@
     startBtn.addEventListener('click', async () => {
       // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1920 }, // Résolution Full HD
+      height: { ideal: 1080 }, facingMode: 'user' }, audio: true });
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
