@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booth Vidéo</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <meta name="theme-color" content="#000000">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
@@ -71,17 +72,49 @@
       z-index: 10;
     }
     button {
-      padding: 12px 24px;
-      font-size: 18px;
+      padding: 16px;
+      font-size: 24px;
       border: none;
-      border-radius: 10px;
+      border-radius: 50%;
       background-color: #007bff;
       color: white;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      transition: background-color 0.3s, transform 0.2s;
     }
+
     button:hover {
-      background-color: #0056b3;
+    background-color: #0056b3;
+    transform: scale(1.1); /* Agrandir légèrement au survol */
+    }
+
+    button:active {
+      transform: scale(0.95); /* Réduire légèrement lorsqu'on clique */
+    }
+
+    button i {
+      pointer-events: none; /* Empêche le clic sur l'icône elle-même */
+    }
+
+    #start-btn {
+      background-color: #28a745; /* Vert pour le bouton Play */
+    }
+
+    #stop-btn {
+      background-color: #dc3545; /* Rouge pour Stop */
+    }
+
+    #retry-btn {
+      background-color: #ffc107; /* Jaune pour Restart */
+    }
+
+    #download-btn {
+      background-color: #17a2b8; /* Bleu clair pour Check */
     }
     a {
       text-decoration: none;
@@ -102,10 +135,10 @@
   <video id="preview" autoplay playsinline muted></video>
   <div id="countdown">5</div>
   <div id="controls">
-    <button id="start-btn">Lancer la vidéo</button>
-    <button id="stop-btn" style="display: none;">Arrêter</button>
-    <button id="retry-btn" style="display: none;">Relancer</button>
-    <button id="download-btn" style="display: none;">Continuer</button>
+    <button id="start-btn"><i class="fas fa-play"></i></button>
+    <button id="stop-btn" style="display: none;"><i class="fas fa-stop"></i></button>
+    <button id="retry-btn" style="display: none;"><i class="fas fa-sync-alt"></i></button>
+    <button id="download-btn" style="display: none;"><i class="fas fa-check"></i></button>
   </div>
 
   <script>
