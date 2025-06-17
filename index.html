@@ -120,6 +120,11 @@
       // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+      // Desactiver le monitoring audio 
+      const audioTracks = stream.getAudioTracks();
+      audioTracks.forEach(track => {
+        track.enabled = false ; // empeche le son d'être envoyé aux hauts parleurs 
+      }); 
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
