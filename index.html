@@ -120,11 +120,16 @@
       // Masquer l'image et afficher la caméra
       imageContainer.style.display = 'none';
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
-      // Desactiver le monitoring audio 
-      const audioTracks = stream.getAudioTracks();
-      audioTracks.forEach(track => {
-        track.enabled = false ; // empeche le son d'être envoyé aux hauts parleurs 
-      }); 
+      // Créer un contexte audio pour manipuler le flux
+      const audioContext = new AudioContext();
+      const audioSource = audioContext.createMediaStreamSource(stream);
+
+      // Créer un dummy (aucune sortie audio)
+      const dummyGainNode = audioContext.createGain();
+      dummyGainNode.gain.value = 0; // Pas de son audible
+      audioSource.connect(dummyGainNode).connect(audioContext.destination);
+
+      // Attacher le flux vidéo au lecteur
       videoPreview.srcObject = stream;
       videoPreview.style.display = 'block';
       startBtn.style.display = 'none';
