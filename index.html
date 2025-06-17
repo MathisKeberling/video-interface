@@ -117,34 +117,44 @@
     let mediaRecorder, chunks = [];
 
     startBtn.addEventListener('click', async () => {
-      // Masquer l'image et afficher la caméra
-      imageContainer.style.display = 'none';
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
-      // Créer un contexte audio pour manipuler le flux
-      const audioContext = new AudioContext();
-      const audioSource = audioContext.createMediaStreamSource(stream);
+      try {
+        // Obtenir le flux vidéo et audio
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
 
-      // Créer un dummy (aucune sortie audio)
-      const dummyGainNode = audioContext.createGain();
-      dummyGainNode.gain.value = 0; // Pas de son audible
-      audioSource.connect(dummyGainNode).connect(audioContext.destination);
+        // Créer un contexte audio pour manipuler le flux
+        const audioContext = new AudioContext();
+        const audioSource = audioContext.createMediaStreamSource(stream);
 
-      // Attacher le flux vidéo au lecteur
-      videoPreview.srcObject = stream;
-      videoPreview.style.display = 'block';
-      startBtn.style.display = 'none';
-      countdown.style.display = 'block';
+        // Déconnecter la sortie audio (aucun son audible via les haut-parleurs)
+        const audioDestination = audioContext.createMediaStreamDestination();
+        audioSource.connect(audioDestination); // Empêcher le son d'atteindre les haut-parleurs
 
-      // Démarrer le compte à rebours
-      let timer = 5;
-      const interval = setInterval(() => {
-        countdown.textContent = timer--;
-        if (timer < 0) {
-          clearInterval(interval);
-          countdown.style.display = 'none';
-          startRecording(stream);
-        }
-      }, 1000);
+        // Fusionner les pistes audio et vidéo pour l'enregistrement
+        const videoTracks = stream.getVideoTracks();
+        const audioTracks = audioDestination.stream.getAudioTracks();
+        const combinedStream = new MediaStream([...videoTracks, ...audioTracks]);
+
+        // Attacher le flux vidéo au lecteur pour l'aperçu
+        videoPreview.srcObject = combinedStream;
+        videoPreview.style.display = 'block';
+        imageContainer.style.display = 'none';
+        startBtn.style.display = 'none';
+        countdown.style.display = 'block';
+
+        // Démarrer le compte à rebours
+        let timer = 5;
+        const interval = setInterval(() => {
+          countdown.textContent = timer--;
+          if (timer < 0) {
+            clearInterval(interval);
+            countdown.style.display = 'none';
+            startRecording(combinedStream);
+          }
+        }, 1000);
+      } catch (error) {
+          console.error('Erreur lors de l’accès à la caméra ou au microphone :', error);
+          alert('Impossible d’accéder à la caméra ou au microphone.');
+      }
     });
 
     function startRecording(stream) {
@@ -174,5 +184,6 @@
       imageContainer.style.display = 'block';
     });
   </script>
+
 </body>
 </html>
