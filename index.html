@@ -151,27 +151,7 @@
     const imageContainer = document.getElementById('image-container');
     let mediaRecorder, chunks = [];
 
-    // Fonction pour uploader la vidéo au serveur
-    async function uploadVideo(videoBlob) {
-      const formData = new FormData();
-      formData.append('video', videoBlob, 'video.webm');
 
-      try {
-        const response = await fetch('https://your-server-url/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          alert('Vidéo téléchargée avec succès !');
-        } else {
-          alert('Erreur lors du téléchargement de la vidéo.');
-        }
-      } catch (error) {
-        console.error('Erreur réseau :', error);
-        alert('Impossible de télécharger la vidéo.');
-      }
-    }
 
     startBtn.addEventListener('click', async () => {
       // Masquer l'image et afficher la caméra
@@ -201,9 +181,13 @@
       mediaRecorder.onstop = () => {
         const videoBlob = new Blob(chunks, { type: 'video/webm' });
         const videoURL = URL.createObjectURL(videoBlob);
-        downloadBtn.onclick = async () => {
-          await uploadToServer(videoBlob);
-          // Réinitialiser l'interface
+        downloadBtn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = videoURL;
+          a.download = 'video.webm';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
           resetInterface();
         };
         retryBtn.onclick = () => {
