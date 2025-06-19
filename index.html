@@ -61,7 +61,7 @@
       font-size: 150px;
       font-weight: bold;
       font-family: 'Courier New', Courier, monospace;
-      color: beige;
+      color: rgb(255, 0, 0);
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
       animation: fadeInOut 1s ease-in-out infinite;
       z-index: 2;
@@ -79,46 +79,50 @@
       z-index: 10;
     }
     button {
-      padding: 12px 24px;
-      font-size: 18px;
+      padding: 16px;
+      font-size: 24px;
       border: none;
-      border-radius: 10px;
-      background-color: beige;
-      color: black;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      transition: background-color 0.3s, transform 0.2s;
     }
-
+    
     button:hover {
-    background-color: #d9b88f;
-    transform: scale(1.1); /* Agrandir légèrement au survol */
+      background-color: #0056b3;
+      transform: scale(1.1); /* Agrandir légèrement au survol */
     }
-
+    
     button:active {
       transform: scale(0.95); /* Réduire légèrement lorsqu'on clique */
     }
-
+    
     button i {
       pointer-events: none; /* Empêche le clic sur l'icône elle-même */
     }
     
-    /*
     #start-btn {
-      background-color: #FFF8DC; 
+      background-color: #FFF8DC; /* Vert pour le bouton Play */
     }
-
+    
     #stop-btn {
-      background-color: #FFF8DC; 
+      background-color: #FFF8DC; /* Rouge pour Stop */
     }
 
     #retry-btn {
-      background-color: #FFF8DC; 
+      background-color: #FFF8DC; /* Jaune pour Restart */
     }
-
+    
     #download-btn {
-      background-color: #FFF8DC;
+      background-color: #FFF8DC; /* Bleu clair pour Check */
     }
-    */
     a {
       text-decoration: none;
       color: white;
