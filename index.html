@@ -9,10 +9,6 @@
   <meta name="theme-color" content="#000000">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1); }
-    }
     body {
       margin: 0;
       padding: 0;
@@ -58,12 +54,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 150px;
+      font-size: 96px;
       font-weight: bold;
-      font-family: 'Courier New', Courier, monospace;
-      color: rgb(255, 0, 0);
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
-      animation: fadeInOut 1s ease-in-out infinite;
+      color: red;
       z-index: 2;
       display: none;
     }
@@ -84,7 +77,7 @@
       border: none;
       border-radius: 50%;
       background-color: #007bff;
-      color: white;
+      color: rgb(0, 0, 0);
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       display: flex;
