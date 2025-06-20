@@ -41,7 +41,10 @@
       object-fit: cover; /* Remplit tout l'écran en recadrant si nécessaire */
       border-radius: 0;  /* Supprime les coins arrondis */
       box-shadow: none;  /* Supprime l'ombre pour un plein écran */
+      image-rendering: crisp-edges;
       image-rendering: pixelated; /* Rend les pixels nets */
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
     #preview {
       display: none;
