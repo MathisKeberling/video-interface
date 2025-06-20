@@ -142,16 +142,6 @@
   </div>
 
   <script>
-    // Demander les autorisations au chargement de la page
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        console.log('Autorisations accordées.');
-      } catch (err) {
-        console.error('Permissions non accordées :', err);
-        alert('Vous devez accorder les autorisations pour utiliser cette application.');
-      }
-    });
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
     const retryBtn = document.getElementById('retry-btn');
@@ -192,23 +182,16 @@
         const videoBlob = new Blob(chunks, { type: 'video/mp4' });
         const videoURL = URL.createObjectURL(videoBlob);
         downloadBtn.onclick = () => {
-          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-          if (isIOS) {
-            // Rediriger vers l'URL pour permettre à l'utilisateur de télécharger manuellement
-            const newWindow = window.open(videoURL, '_blank');
-            if (!newWindow) {
-                alert("Autorisez les pop-ups pour télécharger la vidéo.");
-            }
-          } else {
-            // Procéder au téléchargement classique pour les autres systèmes
-            const a = document.createElement('a');
-            a.href = videoURL;
-            a.download = `video_${Date.now()}.mp4`; // Nom unique
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            resetInterface();
-          }
+          // Générer un nom unique basé sur la date et l'heure
+          const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+          const uniqueName = `video_${timestamp}.mp4`;
+          const a = document.createElement('a');
+          a.href = videoURL;
+          a.download = uniqueName;
+          //document.body.appendChild(a);
+          a.click();
+          //document.body.removeChild(a);
+          resetInterface();
         };
         retryBtn.onclick = () => {
           //Réinitialiser sans téléchargement
