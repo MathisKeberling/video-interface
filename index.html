@@ -186,11 +186,12 @@
           const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
           const uniqueName = `video_${timestamp}.mp4`;
           const a = document.createElement('a');
+          a.style.display = 'none';
           a.href = videoURL;
           a.download = uniqueName;
-          //document.body.appendChild(a);
+          document.body.appendChild(a);
           a.click();
-          //document.body.removeChild(a);
+          document.body.removeChild(a);
           resetInterface();
         };
         retryBtn.onclick = () => {
