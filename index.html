@@ -142,6 +142,16 @@
   </div>
 
   <script>
+    // Demander les autorisations au chargement de la page
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        console.log('Autorisations accordées.');
+      } catch (err) {
+        console.error('Permissions non accordées :', err);
+        alert('Vous devez accorder les autorisations pour utiliser cette application.');
+      }
+    });
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
     const retryBtn = document.getElementById('retry-btn');
