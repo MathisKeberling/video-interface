@@ -176,15 +176,15 @@
     });
 
     function startRecording(stream) {
-      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
       mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
       mediaRecorder.onstop = () => {
-        const videoBlob = new Blob(chunks, { type: 'video/mp4' });
+        const videoBlob = new Blob(chunks, { type: 'video/webm' });
         const videoURL = URL.createObjectURL(videoBlob);
         downloadBtn.onclick = () => {
           // Générer un nom unique basé sur la date et l'heure
           const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
-          const uniqueName = `video_${timestamp}.mp4`;
+          const uniqueName = `video_${timestamp}.webm`;
           const a = document.createElement('a');
           a.href = videoURL;
           a.download = uniqueName;
